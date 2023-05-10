@@ -1,0 +1,167 @@
+# Output Window
+<OutputWindow>:
+    name: "output"
+    status: status
+    discount: discount
+    transit: transit
+    distance: distance
+    total: total
+    MDBoxLayout:
+        orientation: 'vertical'
+        size_hint: .9, .9
+        spacing: 10
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        MDLabel:
+            text: "Good Day! Here is the summary of your transaction."
+            color_mode: "custom"
+            font_style: "Body2"
+            valign: 'middle'
+            line_color_focus: 0, 0, 0, 1
+            line_color_normal: 0, 0, 0, 1
+        MDCard:
+            orientation: 'vertical'
+            padding: 20
+            size: '200dp', '450dp'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint_y: None
+            MDLabel:
+                text: "D E T A I L S"
+                bold: True
+                halign: "center"
+                font_style: "Body1"
+                size_hint_y: .2
+                theme_text_color: "Custom"
+                text_color: [20/255, 20/255, 20/255, 1]
+
+            # Transit
+            MDBoxLayout:
+                orientation: 'horizontal'
+                MDLabel:
+                    text: "Transit"
+                    pos_hint: {'center_y': 0.5}
+                    size_hint_x: 0.4
+                    bold: "True"
+                    font_style: "Overline"
+                    theme_text_color: "Custom"
+                    text_color: [20/255, 20/255, 20/255, 1]
+                MDTextField:
+                    id: transit
+                    disabled: True
+                    font_style: "Caption"
+                    color_mode: 'custom'
+                    halign: "center"
+                    pos_hint: {'center_y': 0.5}
+                    size_hint_x: 0.8
+                    line_color_focus: 0, 0, 0, 1
+                    line_color_normal: 0, 0, 0, 1
+
+            # Discount
+            MDBoxLayout:
+                orientation: 'horizontal'
+                MDLabel:
+                    text: "Discount"
+                    pos_hint: {'center_y': 0.5}
+                    bold: "True"
+                    size_hint_x: 0.4
+                    font_style: "Overline"
+                    theme_text_color: "Custom"
+                    text_color: [20/255, 20/255, 20/255, 1]
+                MDTextField:
+                    id: discount
+                    font_style: "Caption"
+                    disabled: True
+                    halign: "center"
+                    color_mode: 'custom'
+                    pos_hint: {'center_y': 0.5}
+                    line_color_focus: 0, 0, 0, 1
+                    line_color_normal: 0, 0, 0, 1
+                    size_hint_x: 0.8
+
+            # Category
+            MDBoxLayout:
+                orientation: 'horizontal'
+                MDLabel:
+                    text: "Category"
+                    bold: "True"
+                    pos_hint: {'center_y': 0.5}
+                    font_style: "Overline"
+                    size_hint_x: 0.4
+                    theme_text_color: "Custom"
+                    text_color: [20/255, 20/255, 20/255, 1]
+                MDTextField:
+                    id: status
+                    disabled: True
+                    font_style: "Caption"
+                    halign: "center"
+                    pos_hint: {'center_y': 0.5}
+                    size_hint_x: 0.8
+                    color_mode: 'custom'
+                    line_color_focus: 0, 0, 0, 1
+                    line_color_normal: 0, 0, 0, 1
+            
+            # Distance
+            MDBoxLayout:
+                orientation: 'horizontal'
+                MDLabel:
+                    text: "Distance"
+                    bold: "True"
+                    pos_hint: {'center_y': 0.5}
+                    font_style: "Overline"
+                    size_hint_x: 0.4
+                    theme_text_color: "Custom"
+                    text_color: [20/255, 20/255, 20/255, 1]
+                MDTextField:
+                    id: distance
+                    disabled: True
+                    font_style: "Caption"
+                    halign: "center"
+                    pos_hint: {'center_y': 0.5}
+                    color_mode: 'custom'
+                    size_hint_x: 0.8
+                    line_color_focus: 0, 0, 0, 1
+                    line_color_normal: 0, 0, 0, 1
+
+            # Total
+            MDBoxLayout:
+                orientation: 'horizontal'
+                MDLabel:
+                    text: "Total"
+                    bold: "True"
+                    size_hint_x: 0.4
+                    pos_hint: {'center_y': 0.5}
+                    font_style: "Overline"
+                    theme_text_color: "Custom"
+                MDTextField:
+                    id: total
+                    disabled: True
+                    multiline: True
+                    size_hint_x: 0.8
+                    pos_hint: {'center_y': 0.5}
+                    font_style: "Caption"
+                    halign: 'center'
+                    color_mode: 'custom'
+                    line_color_focus: 0, 0, 0, 1
+                    line_color_normal: 0, 0, 0, 1
+
+        # Button
+        MDBoxLayout:
+            orientation: 'horizontal'
+            MDIconButton:
+                icon: "arrow-left"
+                pos_hint: {'center_y': 0.5}
+                on_release:
+                    app.root.current = "second"
+                    root.manager.transition.direction = "right"
+            MDFlatButton:
+                text: "PARA"
+                font_name: "RobotoMedium"
+                size_hint_x: 0.9
+                pos_hint: {'center_y': 0.5}
+                theme_text_color: 'Custom'
+                text_color: [1, 1, 1, 1]
+                md_bg_color: [20/255, 20/255, 20/255, 1]
+                border_radius: 20
+                radius: [15]
+                on_release:
+                    root.reset()
+                    
