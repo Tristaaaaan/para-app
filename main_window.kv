@@ -5,9 +5,17 @@
     MDBoxLayout:
         orientation: 'vertical'
         spacing: 10
+        size_hint: .95, .4
         padding: 10
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        size_hint: 0.9, 0.4
+        
+        MDIconButton:
+            icon: "arrow-left"
+            user_font_size: "20dp"
+            pos_hint: {'center_y': 0.5}
+            on_release:
+                app.root.current = "history"
+                root.manager.transition.direction = "left"
         MDLabel:
             text: "Category"
             font_style: "Overline"
@@ -15,15 +23,10 @@
             color_mode: 'custom'
             line_color_focus: 0, 0, 0, 1
             line_color_normal: 0, 0, 0, 1
-        MDTextField:
+        MDLabel:
             id: status
-            text: "Regular"
-            bold: True
-            disabled: True
+            text: "Regular Commuter"
             color_mode: 'custom'
-            mode: "rectangle"
-            line_color_focus: 0, 0, 0, 1
-            line_color_normal: 0, 0, 0, 1
         MDBoxLayout:
             orientation: 'horizontal'
             spacing: 10
@@ -31,13 +34,14 @@
                 size_hint: None, None
                 size: dp(48), dp(48)
                 pos_hint: {'center_y': 0.5}
+                #selected_color: [0, 1, 0, 1]  
                 on_active:
                     root.category_(*args)
             MDFlatButton:
                 text: "PROCEED"
                 font_name: "RobotoMedium"
                 text_color: [1, 1, 1, 1]
-                size_hint_x: 0.9
+                size_hint_x: 1
                 pos_hint: {'center_y': 0.5}
                 theme_text_color: 'Custom'
                 md_bg_color: [20/255, 20/255, 20/255, 1]

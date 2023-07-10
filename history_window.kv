@@ -1,0 +1,108 @@
+# History Window
+<HistoryWindow>:
+    name: "history"
+    listexpenses: listexpenses
+    overall: overall
+    MDBoxLayout:
+        size_hint: 1, 1
+        md_bg_color: 127/255, 61/255, 255/255, 1
+        orientation: 'vertical'
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        spacing: 20
+        #Button
+        MDBoxLayout:
+            size_hint: .95, .1
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            MDRelativeLayout:
+                pos_hint: {'center_y': .5}
+                size_hint: 1, 1
+                MDIconButton:
+                    pos_hint: {'center_y': .5}
+                    icon: 'arrow-left'
+                    halign: 'right'
+                    border: [20, 20, 20, 20]
+                    text_color: 'white'
+                    theme_text_color: 'Custom'
+                    on_release: 
+                                
+                        app.root.current = "main"
+                        root.manager.transition.direction = "right"
+                MDLabel:
+                    text: 'Expense'
+                    halign: 'center'
+                    text_color: 'white'
+                    theme_text_color: 'Custom'
+
+        # Inputs           
+        MDBoxLayout:
+            size_hint: .90, .3
+            pos_hint: {'center_x': .5}
+            MDBoxLayout:
+                orientation: 'vertical' 
+                size_hint: 1, 1
+                MDLabel:
+                    pos_hint: {'center_y': .5}
+                    size_hint_y: .4
+                    text: "You've already spent"
+                    halign: 'left'
+                    font_size: '18sp'
+                    text_color: 252/255, 252/255, 252/255, 1
+                    opacity: 0.64
+                    theme_text_color: 'Custom'
+                MDLabel:
+                    id: overall
+                    size_hint_y: .6
+                    text_color: 'white'
+                    font_size: '64sp'
+                    theme_text_color: 'Custom'
+        
+
+        # List
+        CustomMDBoxLayout:
+            padding: 0, 20, 0, 0 
+            size_hint_y: .6
+            ScrollView:
+                MDList:
+                    id: listexpenses
+                    padding: 0
+
+
+<SwipeToDeleteItem>:
+    size_hint_y: None
+    height: content.height
+    MDCardSwipeLayerBox:
+        spacing: 10
+        MDIconButton:
+            icon: "trash-can"
+            pos_hint: {"center_y": .5}
+            on_release: root.remove_item(root)
+            theme_text_color: 'Custom'
+            text_color: 'white'
+    MDCardSwipeFrontBox:
+        canvas.before:
+            Color:
+                rgba: [1, 1, 1, 1]  # Set the desired background color here
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [0,]  # Set the radius value to 0 to remove the rounded corners
+        ListItemWithIcon:
+            id: content
+            text_color: 41/255, 43/255, 45/255, 1
+            secondary_text_color: 145/255, 145/255, 159/255, 1
+            secondary_theme_text_color: 'Custom'
+            text: f"[size=16sp]{root.text}[/size]"
+            secondary_text: f"[size=13sp]{root.secondary_text}[/size]"
+            _no_ripple_effect: True
+            CustomIconLeftWidget:
+                canvas.before:
+                    Color:
+                        rgba: root.md_bg_color
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10), dp(10)] 
+                icon: root.icon 
+                theme_icon_color: 'Custom'
+                icon_color: root.icon_color
+                _no_ripple_effect: True
