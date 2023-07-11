@@ -48,5 +48,14 @@ class Database:
 
         self.data_con.commit()
 
+    def expenses_sum(self):
+        """Getting the sum of expenses"""
+        spent_sum = self.fare.execute(
+            "SELECT sum(total) FROM history").fetchall()
+
+        expense_sum = sum(res[0] for res in spent_sum)
+
+        return expense_sum
+
     def close_db_connection(self):
         self.data_con.close()

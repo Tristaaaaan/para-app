@@ -9,11 +9,11 @@ class Computation:
     def calculate(status, starting_place, destination, passenger, minimum_fare):
 
         # Status and Discount
-        if status == "Regular":
-            getStatus = "Regular"
+        if status == "Regular Commuter":
+            getStatus = "Regular Commuter"
             getDiscount = "None"
         else:
-            getStatus = "Discounted"
+            getStatus = "Discount Beneficiary"
             getDiscount = "20%"
 
         getTransit = starting_place+" - "+destination
