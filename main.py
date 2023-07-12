@@ -23,6 +23,26 @@ from datetime import datetime
 db = Database()
 
 
+############################################################
+#                       MAIN WINDOW                        #
+############################################################
+
+
+class MainWindow(Screen):
+
+    Builder.load_file('main_window.kv')
+
+    def category_(self, checkbox, active):
+        if active:
+            self.ids.status.text = "Discount Beneficiary"
+        else:
+            self.ids.status.text = "Regular Commuter"
+
+############################################################
+#                      SECOND WINDOW                       #
+############################################################
+
+
 class ApproveExpense(MDBoxLayout):
     text = StringProperty()
     distance = StringProperty()
@@ -30,6 +50,7 @@ class ApproveExpense(MDBoxLayout):
 
     def cancel(self):
         MDApp.get_running_app().root.second.close_dialog()
+        MDApp.get_running_app().root.second.clear()
 
 
 class DeniedExpense(MDBoxLayout):
@@ -63,7 +84,7 @@ class StartingPoint(MDRelativeLayout):
         self.dialog = MDDialog(
             size_hint=(0.85, None),
             type="custom",
-            title='Summary',
+            title='Starting Point',
             radius=[20, 20, 20, 20],
             auto_dismiss=False,
             content_cls=RouteOne()
@@ -81,7 +102,7 @@ class EndPoint(MDRelativeLayout):
         self.dialog = MDDialog(
             size_hint=(0.85, None),
             type="custom",
-            title='Summary',
+            title='Destination',
             radius=[20, 20, 20, 20],
             auto_dismiss=False,
             content_cls=RevRouteOne()
@@ -110,20 +131,15 @@ class RevRouteOne(FloatLayout):
         MDApp.get_running_app().root.second.destination.close_dialog()
 
 
-class MainWindow(Screen):
-
-    Builder.load_file('main_window.kv')
-
-    def category_(self, checkbox, active):
-        if active:
-            self.ids.status.text = "Discount Beneficiary"
-        else:
-            self.ids.status.text = "Regular Commuter"
-
-
 class SecondWindow(Screen):
 
     Builder.load_file('second_window.kv')
+
+    def clear(self):
+        self.ids.starting_place.starting_point.text = ''
+        self.ids.destination.end_point.text = ''
+        self.ids.passenger.text = '1'
+        self.ids.minimum_fare.text = '12'
 
     def close_dialog(self, *args):
         self.added.dismiss()
@@ -160,16 +176,14 @@ class SecondWindow(Screen):
     def validate(self):
         starting_place3 = self.ids.starting_place.starting_point.text
         destination3 = self.ids.destination.end_point.text
-        passenger3 = self.ids.passenger.text
-        minimum_fare3 = self.ids.minimum_fare.text
+        passenger3 = float(self.ids.passenger.text)
+        minimum_fare3 = float(self.ids.minimum_fare.text)
         if (starting_place3 == ''
                 or destination3 == ''
                 or starting_place3 not in starting_place_1
                 or destination3 not in starting_place_1
-                or not passenger3.isnumeric()
-                or not minimum_fare3.isnumeric()
-                or int(passenger3) < 1
-                or int(minimum_fare3) < 1):
+                or passenger3 < 1
+                or minimum_fare3 < 1):
             self.input_denied()
 
         else:
@@ -180,8 +194,8 @@ class SecondWindow(Screen):
             self.manager.main.status.text,
             self.ids.starting_place.starting_point.text,
             self.ids.destination.end_point.text,
-            self.ids.passenger.text,
-            self.ids.minimum_fare.text
+            float(self.ids.passenger.text),
+            float(self.ids.minimum_fare.text)
         )
         transit = outputs[2]
 
@@ -207,6 +221,14 @@ class SecondWindow(Screen):
         self.ids.destination.text = ''
         self.ids.passenger.text = '1'
         self.ids.minimum_fare.text = '12'
+
+
+############################################################
+#                      HISTORY WINDOW                      #
+############################################################
+
+class ListItemWithIcon(TwoLineAvatarIconListItem):
+    '''Custom list item'''
 
 
 class CustomMDBoxLayout(MDBoxLayout):
@@ -248,11 +270,6 @@ class SwipeToDeleteItem(MDCardSwipe):
                     (moneyFormat.money(0)))
         except ValueError:
             pass
-
-
-class ListItemWithIcon(TwoLineAvatarIconListItem):
-    '''Custom list item'''
-    # divider = None
 
 
 class HistoryWindow(Screen):

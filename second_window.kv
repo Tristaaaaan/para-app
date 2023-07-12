@@ -21,7 +21,7 @@
         MDLabel:
             valign: 'middle'
             halign: 'center'
-            font_name: 'fonts/Roboto-Black'
+            font_name: 'Inter/Inter-Bold'
             text: 'Error'
             text_color:  253/255, 60/255, 74/255, 1
             font_size: '20sp'
@@ -29,22 +29,21 @@
         MDLabel:
             valign: 'middle'
             halign: 'center'
-            font_name: 'fonts/Roboto-Light'
+            font_name: 'Inter/Inter-Regular'
             text: 'Transaction cannot be completed'
             font_size: '14sp'
 
 <StartingPoint>
     starting_point: starting_point
     MDTextField:
+    
         id: starting_point
         hint_text: "    Starting Point    "        
         font_size: "18sp"  
         mode: 'rectangle'
         font_name: 'Inter/Inter-Regular'
-
+        text_color_focus: [80/255, 194/255, 201/255, 1]
         line_color_focus: [80/255, 194/255, 201/255, 1]
-        text_color_focus: 'blue'
-        current_hint_text_color: 'red'
         theme_text_color: 'Custom'
     MDIconButton:
         icon: "bus"
@@ -60,7 +59,7 @@
     MDTextField:
         id: end_point
         font_name: 'Inter/Inter-Regular'
-
+        text_color_focus: [80/255, 194/255, 201/255, 1]
         mode: 'rectangle'
         hint_text: "    Destination    "
         font_size: "18sp"
@@ -112,6 +111,7 @@
                 MDLabel:
                     text: "Route"
                     halign: "center"
+
                     font_name: 'Inter/Inter-Bold'
                     bold: True
                     theme_text_color: "Custom"
@@ -122,7 +122,7 @@
                     pos_hint:{'center_y': .5, 'right': 1}
                     on_release:
                         app.root.current = "history"
-                        root.manager.transition.direction = "right"
+                        root.manager.transition.direction = "left"
 
         MDBoxLayout:
             size_hint: 0.95, .9
@@ -201,8 +201,6 @@
                         line_color_normal: 0, 0, 0, 1
                         text: '12'
                         font_size: "18sp"
-                        on_focus:
-                            bottom_sheet.open()
             
             # Submit & Refresh
             MDBoxLayout:
@@ -222,7 +220,8 @@
                 MDIconButton
                     icon: "refresh"
                     pos_hint: {'center_y': 0.5}
-
+                    on_release:
+                        root.clear()
  
 
 <ApproveExpense>:
@@ -252,7 +251,7 @@
             MDLabel:
                 valign: 'middle'
                 halign: 'center'
-                font_name: 'fonts/Roboto-Black'
+                font_name: 'Inter/Inter-Bold'
                 text: 'Success'
                 text_color:  127/255, 61/255, 255/255, 1
                 font_size: '20sp'
@@ -262,14 +261,14 @@
                 halign: 'center'
                 text: 'Transaction has been completed'
                 font_size: '14sp'
-                font_name: 'fonts/Roboto-Light'
+                font_name: 'Inter/Inter-Regular'
 
  
         MDBoxLayout:
             MDTextField:
                 pos_hint: { 'center_y': .5}
                 id: transit
-                font_name: 'fonts/Roboto-Medium'
+                font_name: 'Inter/Inter-Regular'
 
                 text : f"{root.text}"
                 color_mode: 'custom'
@@ -287,7 +286,7 @@
                 pos_hint: { 'center_y': .5}
                # id: distance
                 text : f"{root.distance}"
-                font_name: 'fonts/Roboto-Medium'
+                font_name: 'Inter/Inter-Regular'
                 color_mode: 'custom'
                 line_color_focus: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1
@@ -299,7 +298,7 @@
             MDTextField:
               #  id: total
                 text : f"{root.total}"
-                font_name: 'fonts/Roboto-Medium'
+                font_name: 'Inter/Inter-Regular'
 
                 pos_hint: { 'center_y': .5}
                 color_mode: 'custom'
@@ -319,7 +318,6 @@
                 on_release:
                     app.root.current = 'history'
                     root.cancel()
-#root.transition.direction = "right"
             MDFlatButton:
                 text: "PARA"
                 pos_hint: { 'center_y': .5}
