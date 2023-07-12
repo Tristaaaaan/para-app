@@ -42,8 +42,6 @@
         font_size: "18sp"  
         mode: 'rectangle'
         font_name: 'Inter/Inter-Regular'
-        text_color_focus: [80/255, 194/255, 201/255, 1]
-        line_color_focus: [80/255, 194/255, 201/255, 1]
         theme_text_color: 'Custom'
     MDIconButton:
         icon: "bus"
@@ -59,11 +57,10 @@
     MDTextField:
         id: end_point
         font_name: 'Inter/Inter-Regular'
-        text_color_focus: [80/255, 194/255, 201/255, 1]
         mode: 'rectangle'
         hint_text: "    Destination    "
         font_size: "18sp"
-        line_color_focus: [80/255, 194/255, 201/255, 1]
+
 
     MDIconButton:
         icon: "bus-marker"
@@ -92,11 +89,10 @@
         size_hint: 1, 1
         orientation: 'vertical'
         pos_hint: {'center_x': .5, 'center_y': .5}
-        md_bg_color: [238/255, 238/255, 238/255, 1]
 
         #Button
         MDBoxLayout:
-            size_hint: .95, .1
+            size_hint: .90, .1
             pos_hint: {'center_x': .5, 'center_y': .5}
 
             MDRelativeLayout:
@@ -125,7 +121,7 @@
                         root.manager.transition.direction = "left"
 
         MDBoxLayout:
-            size_hint: 0.95, .9
+            size_hint: 0.90, .9
             spacing: 10
             pos_hint: {'center_x': .5, 'center_y': .5}
             orientation: 'vertical'
@@ -221,19 +217,20 @@
                     icon: "refresh"
                     pos_hint: {'center_y': 0.5}
                     on_release:
-                        root.clear()
- 
 
 <ApproveExpense>:
     orientation: "vertical"
     spacing: 15
     size_hint: 1, None
-    height: "325dp"
+    height: "350dp"
     padding: [0, 10, 0, 10]
     MDBoxLayout:
-        spacing: 
-        size_hint_y: 1
-        pos_hint: { 'center_y': .5}
+        spacing: 15
+        size_hint: .9, 1
+
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        md_bg_color: 'white'
+        radius: 4
         orientation: 'vertical'
         MDBoxLayout:
             pos_hint: {'center_y': .5, 'center_x': .5}

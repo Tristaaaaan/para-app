@@ -1,3 +1,4 @@
+import regex
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.bottomsheet import MDBottomSheet
@@ -21,7 +22,6 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from routes import *
 from datetime import datetime
 db = Database()
-
 
 ############################################################
 #                       MAIN WINDOW                        #
@@ -67,11 +67,15 @@ class RouteOne(FloatLayout):
 
     def createlist(self, *args):
         for i in reversed(starting_place_1):
-            item = OneLineListItem(text=f"{i}", divider=None)
+            item = OneLineListItem(
+                text=f"{i}",
+                divider=None
+            )
             item.bind(on_release=self.item_selected)
             self.ids.container.add_widget(item)
 
     def item_selected(self, item):
+
         MDApp.get_running_app().root.second.starting_place.starting_point.text = item.text
         MDApp.get_running_app().root.second.starting_place.close_dialog()
 
@@ -84,9 +88,10 @@ class StartingPoint(MDRelativeLayout):
         self.dialog = MDDialog(
             size_hint=(0.85, None),
             type="custom",
-            title='Starting Point',
+            title='[font=Inter/Inter-Medium][size=18sp]Starting Point[/size][/font]',
             radius=[20, 20, 20, 20],
-            auto_dismiss=False,
+            md_bg_color='white',
+
             content_cls=RouteOne()
         )
         self.dialog.open()
@@ -102,9 +107,9 @@ class EndPoint(MDRelativeLayout):
         self.dialog = MDDialog(
             size_hint=(0.85, None),
             type="custom",
-            title='Destination',
+            title='[font=Inter/Inter-Medium][size=18sp]Destination[/size][/font]',
             radius=[20, 20, 20, 20],
-            auto_dismiss=False,
+            md_bg_color='white',
             content_cls=RevRouteOne()
         )
         self.dialog.open()
@@ -154,7 +159,7 @@ class SecondWindow(Screen):
             title='Summary',
             radius=[20, 20, 20, 20],
             auto_dismiss=False,
-
+            md_bg_color='white',
             content_cls=ApproveExpense(
                 text=transit_, distance=distance_, total=fare_)
         )
@@ -204,7 +209,11 @@ class SecondWindow(Screen):
         fare = "₱ " + str('{:.2f}'.format(outputs[4]))
         threading.Thread(target=self.input_added(transit, distance, fare))
 
-        current_date = datetime.now().strftime('%A, %B %d, %Y')
+        date = datetime.now().strftime('%B %d, %Y')
+        current_time = datetime.now().strftime('%I:%M %p')
+
+        current_date = f"{date}, {current_time}"
+
         db.createFareInfo(
             self.ids.starting_place.starting_point.text,
             self.ids.destination.end_point.text,
@@ -298,7 +307,7 @@ class HistoryWindow(Screen):
                     self.transit = spent[1]+" to "+spent[2]
                     self.fare = "₱" + str('{:.2f}'.format(spent[6]))
                     add_expenses = SwipeToDeleteItem(pk=spent[0],
-                                                     text="[font=Inter/Inter-Medium][size=14]" + self.transit + "[/size][/font]", secondary_text="[font=Inter/Inter-Regular][size=10]" + spent[8] + "[/size][/font]", icon=self.icon, md_bg_color=self.md_bg_color, icon_color=self.icon_color, fareTextRight=self.fare)
+                                                     text="[font=Inter/Inter-Medium][size=18sp]" + self.transit + "[/size][/font]", secondary_text="[font=Inter/Inter-Regular][size=14sp]" + spent[8] + "[/size][/font]", icon=self.icon, md_bg_color=self.md_bg_color, icon_color=self.icon_color, fareTextRight=self.fare)
 
                     self.ids.listexpenses.add_widget(add_expenses)
             else:
