@@ -16,7 +16,7 @@ class Computation:
             getStatus = "Discount Beneficiary"
             getDiscount = "20%"
 
-        getTransit = starting_place+" - "+destination
+        getTransit = starting_place+" to "+destination
 
         # Total
 

@@ -295,14 +295,14 @@ class HistoryWindow(Screen):
                         self.md_bg_color = (207/255, 250/255, 234/255, 1)
                         self.icon = 'tag-minus-outline'
 
-                    self.transit = spent[1]+" - "+spent[2]
+                    self.transit = spent[1]+" to "+spent[2]
                     self.fare = "₱" + str('{:.2f}'.format(spent[6]))
                     add_expenses = SwipeToDeleteItem(pk=spent[0],
                                                      text="[font=Inter/Inter-Medium][size=14]" + self.transit + "[/size][/font]", secondary_text="[font=Inter/Inter-Regular][size=10]" + spent[8] + "[/size][/font]", icon=self.icon, md_bg_color=self.md_bg_color, icon_color=self.icon_color, fareTextRight=self.fare)
 
                     self.ids.listexpenses.add_widget(add_expenses)
             else:
-                self.ids.overall.text = str((moneyFormat.money(expenses)))
+                self.ids.overall.text = str((moneyFormat.money(0)))
         except ValueError as e:
             print(e)
 
