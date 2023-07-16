@@ -1,9 +1,24 @@
-import sqlite3
+import psycopg2
 
 
 class Database:
     def __init__(self):
-        self.data_con = sqlite3.connect('fares.db')
+        # Connection details
+        hostname = "silly.db.elephantsql.com"
+        port = 5432
+        database = "ejimkndj"
+        username = "ejimkndj"
+        password = "gcHA1CYttWXBR6ZKCyCCr6Y8i7mMvFR-"
+
+        # Create a connection
+        self.data_con = psycopg2.connect(
+            host=hostname,
+            port=port,
+            database=database,
+            user=username,
+            password=password
+        )
+
         self.fare = self.data_con.cursor()
         self.create_database()
 
@@ -11,7 +26,7 @@ class Database:
         """Create expense table"""
         self.fare.execute(
             "CREATE TABLE IF NOT EXISTS history( \
-                id integer PRIMARY KEY AUTOINCREMENT, \
+                id SERIAL PRIMARY KEY, \
                 starting_place varchar(55) NOT NULL, \
                 destination varchar(55) NOT NULL, \
                 quantity integer NOT NULL, \
@@ -27,31 +42,29 @@ class Database:
     def createFareInfo(self, starting_place, destination, minimum_fare, quantity, distance, total, status, date):
         """Create an expense"""
         self.fare.execute(
-            "INSERT INTO history(starting_place, destination, distance, total, status, minimum_fare, quantity, date) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", (starting_place, destination, distance, total, status, minimum_fare, quantity, date,))
+            "INSERT INTO history(starting_place, destination, distance, total, status, minimum_fare, quantity, date) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)", (starting_place, destination, distance, total, status, minimum_fare, quantity, date,))
         self.data_con.commit()
 
-        # Obtaining the last item to insert in the list on the application
-        select_expense = self.fare.execute(
-            "SELECT * FROM history WHERE total = ?", (total,)).fetchall()
-
-        return select_expense[-1]
-
     def all_data(self):
-        history_data = self.fare.execute(
-            "SELECT * FROM history").fetchall()
+        self.fare.execute(
+            "SELECT * FROM history")
+
+        history_data = self.fare.fetchall()
 
         return history_data
 
     def delete_expense(self, prim_key):
         """Delete a task"""
-        self.fare.execute("DELETE FROM history WHERE id=?", (prim_key,))
+        self.fare.execute("DELETE FROM history WHERE id=%s", (prim_key,))
 
         self.data_con.commit()
 
     def expenses_sum(self):
         """Getting the sum of expenses"""
-        spent_sum = self.fare.execute(
-            "SELECT sum(total) FROM history").fetchall()
+        self.fare.execute(
+            "SELECT sum(total) FROM history")
+
+        spent_sum = self.fare.fetchall()
 
         expense_sum = sum(res[0] for res in spent_sum)
 

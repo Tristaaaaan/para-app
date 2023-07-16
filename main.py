@@ -1,4 +1,3 @@
-import regex
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.bottomsheet import MDBottomSheet
@@ -21,6 +20,8 @@ from kivymd.uix.card import MDCardSwipe
 from kivymd.uix.boxlayout import MDBoxLayout
 from routes import *
 from datetime import datetime
+import threading
+
 db = Database()
 
 ############################################################
