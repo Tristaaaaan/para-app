@@ -203,16 +203,19 @@
                 size_hint_y: .3
                 orientation: 'horizontal'
                 spacing: 10
-                MDFlatButton:
-                    text: "Submit"
-                    font_name: 'Inter/Inter-Medium'
-                    size_hint_x: 0.9
-                    pos_hint: {'center_y': 0.5}
-                    theme_text_color: 'Custom'
-                    text_color: [1, 1, 1, 1]
+
+                MDButton:
+                    style: "filled"
                     md_bg_color: [80/255, 194/255, 201/255, 1]
+                    size_hint_x: .9
                     on_release:
                         root.validate()
+
+                    MDButtonText:
+                        text: "Submit"
+                        text_color: [1, 1, 1, 1]
+                        theme_text_color: 'Custom'
+
                 MDIconButton
                     icon: "refresh"
                     pos_hint: {'center_y': 0.5}
@@ -315,15 +318,15 @@
                 on_release:
                     app.root.current = 'history'
                     root.cancel()
-            MDFlatButton:
-                text: "PARA"
-                pos_hint: { 'center_y': .5}
 
-                font_name: 'Inter/Inter-Medium'
-                text_color: [1, 1, 1, 1]
-                size_hint_x: 1
-                pos_hint: {'center_y': 0.5}
-                theme_text_color: 'Custom'
+            MDButton:
+                style: "filled"
                 md_bg_color: [80/255, 194/255, 201/255, 1]
+                size_hint_x: .9
                 on_release:
                     root.cancel()
+
+                MDButtonText:
+                    text: "PARA"
+                    text_color: [1, 1, 1, 1]
+                    theme_text_color: 'Custom'

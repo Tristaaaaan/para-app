@@ -1,26 +1,30 @@
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.bottomsheet import MDBottomSheet
-import moneyFormat
 from kivymd.uix.label import MDLabel
 from kivymd.uix.relativelayout import MDRelativeLayout
+from kivymd.app import MDApp
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.list import TwoLineAvatarIconListItem, IconLeftWidget, OneLineListItem,  MDList, ILeftBodyTouch
+from kivymd.uix.card import MDCardSwipe
+from kivymd.uix.boxlayout import MDBoxLayout
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import StringProperty, ColorProperty
 from kivy.clock import Clock
+
 import threading
-from kivymd.app import MDApp
-from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDFlatButton
+import validate
+
 from fareCalculation import Computation
-from database import Database
-from kivymd.uix.list import TwoLineAvatarIconListItem, IconLeftWidget, OneLineListItem,  MDList, ILeftBodyTouch
-from kivymd.uix.card import MDCardSwipe
-from kivymd.uix.boxlayout import MDBoxLayout
 from routes import *
 from datetime import datetime
-import threading
+from database import Database
+import moneyFormat
+
+from kivymd.uix.snackbar import Snackbar
 
 db = Database()
 
@@ -150,8 +154,6 @@ class SecondWindow(Screen):
     def close_dialog(self, *args):
         self.added.dismiss()
 
-    # Route3: Validate Input
-
     def input_added(self, transit_, distance_, fare_):
 
         self.added = MDDialog(
@@ -180,18 +182,11 @@ class SecondWindow(Screen):
         Clock.schedule_once(lambda dt: self.dialog.dismiss(), 3)
 
     def validate(self):
-        starting_place3 = self.ids.starting_place.starting_point.text
-        destination3 = self.ids.destination.end_point.text
-        passenger3 = float(self.ids.passenger.text)
-        minimum_fare3 = float(self.ids.minimum_fare.text)
-        if (starting_place3 == ''
-                or destination3 == ''
-                or starting_place3 not in starting_place_1
-                or destination3 not in starting_place_1
-                or passenger3 < 1
-                or minimum_fare3 < 1):
+        if validate.check(self.ids.starting_place.starting_point.text,
+                          self.ids.destination.end_point.text,
+                          self.ids.passenger.text,
+                          self.ids.minimum_fare.text) is True:
             self.input_denied()
-
         else:
             threading.Thread(target=self.output()).start()
 
