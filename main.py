@@ -5,7 +5,7 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.relativelayout import MDRelativeLayout
 from kivymd.app import MDApp
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.list import TwoLineAvatarIconListItem, IconLeftWidget, OneLineListItem,  MDList, ILeftBodyTouch
+
 from kivymd.uix.card import MDCardSwipe
 from kivymd.uix.boxlayout import MDBoxLayout
 
@@ -24,42 +24,15 @@ from datetime import datetime
 from database import Database
 import moneyFormat
 
-from kivymd.uix.snackbar import Snackbar
 
 db = Database()
 
-############################################################
-#                       MAIN WINDOW                        #
-############################################################
+from libs.baseclass import MainWindow
+from libs.baseclass import SecondWindow
+from libs.baseclass import HistoryWindow
 
 
-class MainWindow(Screen):
 
-    Builder.load_file('main_window.kv')
-
-    def category_(self, checkbox, active):
-        if active:
-            self.ids.status.text = "Discount Beneficiary"
-        else:
-            self.ids.status.text = "Regular Commuter"
-
-############################################################
-#                      SECOND WINDOW                       #
-############################################################
-
-
-class ApproveExpense(MDBoxLayout):
-    text = StringProperty()
-    distance = StringProperty()
-    total = StringProperty()
-
-    def cancel(self):
-        MDApp.get_running_app().root.second.close_dialog()
-        MDApp.get_running_app().root.second.clear()
-
-
-class DeniedExpense(MDBoxLayout):
-    pass
 
 
 class RouteOne(FloatLayout):
@@ -141,175 +114,15 @@ class RevRouteOne(FloatLayout):
         MDApp.get_running_app().root.second.destination.close_dialog()
 
 
-class SecondWindow(Screen):
-
-    Builder.load_file('second_window.kv')
-
-    def clear(self):
-        self.ids.starting_place.starting_point.text = ''
-        self.ids.destination.end_point.text = ''
-        self.ids.passenger.text = '1'
-        self.ids.minimum_fare.text = '12'
-
-    def close_dialog(self, *args):
-        self.added.dismiss()
-
-    def input_added(self, transit_, distance_, fare_):
-
-        self.added = MDDialog(
-            size_hint=(0.85, None),
-            type="custom",
-            title='Summary',
-            radius=[20, 20, 20, 20],
-            auto_dismiss=False,
-            md_bg_color='white',
-            content_cls=ApproveExpense(
-                text=transit_, distance=distance_, total=fare_)
-        )
-        self.added.open()
-
-    def input_denied(self):
-        self.dialog = MDDialog(
-            size_hint=(0.85, None),
-            type="custom",
-            elevation=0,
-            auto_dismiss=False,
-            radius=[20, 20, 20, 20],
-            content_cls=DeniedExpense()
-        )
-        self.dialog.open()
-        # Schedule the dialog dismissal after 3 seconds
-        Clock.schedule_once(lambda dt: self.dialog.dismiss(), 3)
-
-    def validate(self):
-        if validate.check(self.ids.starting_place.starting_point.text,
-                          self.ids.destination.end_point.text,
-                          self.ids.passenger.text,
-                          self.ids.minimum_fare.text) is True:
-            self.input_denied()
-        else:
-            threading.Thread(target=self.output()).start()
-
-    def output(self):
-        outputs = Computation.calculate(
-            self.manager.main.status.text,
-            self.ids.starting_place.starting_point.text,
-            self.ids.destination.end_point.text,
-            float(self.ids.passenger.text),
-            float(self.ids.minimum_fare.text)
-        )
-        transit = outputs[2]
-
-        distance = str(outputs[3]) + "KM"
-
-        fare = "₱ " + str('{:.2f}'.format(outputs[4]))
-        threading.Thread(target=self.input_added(transit, distance, fare))
-
-        date = datetime.now().strftime('%B %d, %Y')
-        current_time = datetime.now().strftime('%I:%M %p')
-
-        current_date = f"{date}, {current_time}"
-
-        db.createFareInfo(
-            self.ids.starting_place.starting_point.text,
-            self.ids.destination.end_point.text,
-            self.ids.minimum_fare.text,
-            self.ids.passenger.text,
-            outputs[3],
-            outputs[4],
-            self.manager.main.status.text,
-            current_date
-        )
-
-    def refresh(self):
-        self.ids.starting_place.text = ''
-        self.ids.destination.text = ''
-        self.ids.passenger.text = '1'
-        self.ids.minimum_fare.text = '12'
-
-
-############################################################
-#                      HISTORY WINDOW                      #
-############################################################
-
-class ListItemWithIcon(TwoLineAvatarIconListItem):
-    '''Custom list item'''
 
 
 class CustomMDBoxLayout(MDBoxLayout):
     pass
 
 
-class CustomIconLeftWidget(IconLeftWidget):
-    pass
 
 
-class SwipeToDeleteItem(MDCardSwipe):
-    text = StringProperty()
-    secondary_text = StringProperty()
-    icon = StringProperty()
-    md_bg_color = ColorProperty()
-    icon_color = ColorProperty()
-    fareTextRight = StringProperty()
 
-    def __init__(self, pk=None, **kwargs):
-        super().__init__(**kwargs)
-        # state a pk which we shall use link the list items with the database primary keys
-        self.pk = pk
-
-    def remove_item(self, instance):
-        self.parent.remove_widget(instance)
-
-        db.delete_expense(instance.pk)
-
-        try:
-            length = db.all_data()
-            if length != []:
-
-                expenses = int(db.expenses_sum())
-
-                MDApp.get_running_app().root.history.ids.overall.text = str(
-                    (moneyFormat.money(expenses)))
-            else:
-                MDApp.get_running_app().root.history.ids.overall.text = str(
-                    (moneyFormat.money(0)))
-        except ValueError:
-            pass
-
-
-class HistoryWindow(Screen):
-
-    Builder.load_file('history_window.kv')
-
-    def on_enter(self):
-        self.ids.listexpenses.clear_widgets()
-        current_month = datetime.now().strftime('%B')
-        self.ids.month.text = 'Month of ' + current_month
-        all_expenses = db.all_data()
-        try:
-            if all_expenses != []:
-                expenses = int(db.expenses_sum())
-                self.ids.overall.text = str((moneyFormat.money(expenses)))
-                for spent in reversed(all_expenses):
-                    if spent[7] == 'Regular Commuter':
-                        self.icon_color = (0, 119/255, 1, 1)
-                        self.md_bg_color = (189/255, 220/255, 1, 1)
-                        self.icon = 'tag-outline'
-                    else:
-                        self.icon_color = (0, 168/255, 107/255, 1)
-                        self.md_bg_color = (207/255, 250/255, 234/255, 1)
-                        self.icon = 'tag-minus-outline'
-
-                    self.transit = spent[1]+" to "+spent[2]
-                    self.fare = "₱" + str('{:.2f}'.format(spent[6]))
-                    add_expenses = SwipeToDeleteItem(pk=spent[0],
-                                                     text="[font=Inter/Inter-Medium][size=18sp]" + self.transit + "[/size][/font]", secondary_text="[font=Inter/Inter-Regular][size=14sp]" + spent[8] + "[/size][/font]", icon=self.icon, md_bg_color=self.md_bg_color, icon_color=self.icon_color, fareTextRight=self.fare)
-
-                    self.ids.listexpenses.add_widget(add_expenses)
-            else:
-                self.ids.overall.text = str((moneyFormat.money(0)))
-        except ValueError as e:
-            print(e)
 
 
 class WindowManager(ScreenManager):

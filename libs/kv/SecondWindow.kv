@@ -40,7 +40,7 @@
         id: starting_point
         hint_text: "    Starting Point    "        
         font_size: "18sp"  
-        mode: 'rectangle'
+        mode: 'filled'
         font_name: 'Inter/Inter-Regular'
         theme_text_color: 'Custom'
     MDIconButton:
@@ -57,7 +57,7 @@
     MDTextField:
         id: end_point
         font_name: 'Inter/Inter-Regular'
-        mode: 'rectangle'
+        mode: 'filled'
         hint_text: "    Destination    "
         font_size: "18sp"
 
@@ -277,7 +277,7 @@
                 disabled: True
                 hint_text: '    Transit    '
                 font_size: "15dp"
-                mode: 'rectangle'
+                mode: 'filled'
                 icon_left: 'transit-connection'
         MDBoxLayout:
             orientation: 'horizontal'
@@ -293,7 +293,7 @@
                 disabled: True
                 hint_text: '    Distance    '
                 font_size: "15dp"
-                mode: 'rectangle'
+                mode: 'filled'
                 icon_left: 'map-marker-distance'
             MDTextField:
               #  id: total
@@ -307,7 +307,7 @@
                 disabled: True
                 hint_text: '    Fare    '
                 font_size: "15dp"
-                mode: 'rectangle'
+                mode: 'filled'
                 icon_left: 'cash-check'
         MDBoxLayout:
             orientation: 'horizontal'
